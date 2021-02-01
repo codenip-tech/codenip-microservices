@@ -1,0 +1,34 @@
+version: '3.5'
+
+services:
+  codenip-ms-register-service-web:
+    container_name: codenip-ms-register-service-web
+    build:
+      context: ./docker/nginx
+      args:
+        UID: $U_ID
+    ports:
+      - 1000:80
+    volumes:
+      - ./public:/appdata/www/public
+    depends_on:
+      - codenip-ms-register-service-be
+    networks:
+      - codenip-microservices-network
+
+  codenip-ms-register-service-be:
+    container_name: codenip-ms-register-service-be
+    build:
+      context: docker/php
+      args:
+        UID: $U_ID
+    volumes:
+      - ./:/appdata/www
+    env_file:
+      - .env
+    networks:
+      - codenip-microservices-network
+
+networks:
+  codenip-microservices-network:
+    external: true
