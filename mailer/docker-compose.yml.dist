@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+  codenip-ms-mailer-service-be:
+    container_name: codenip-ms-mailer-service-be
+    build:
+      context: docker/php
+      args:
+        UID: $U_ID
+    volumes:
+      - ./:/appdata/www
+    env_file:
+      - .env
+    depends_on:
+      - codenip-ms-mailer-service-db
+    networks:
+      - codenip-microservices-network
+
+  codenip-ms-mailer-service-db:
+    container_name: codenip-ms-mailer-service-db
+    build:
+      context: ./docker/database
+    ports:
+      - 10200:3306
+    environment:
+      MYSQL_DATABASE: mailer_database
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - codenip-ms-mailer-service-db-data:/var/lib/mysql
+    networks:
+      - codenip-microservices-network
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+
+volumes:
+  codenip-ms-mailer-service-db-data:
+
+networks:
+  codenip-microservices-network:
+    external: true
