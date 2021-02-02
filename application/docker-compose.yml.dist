@@ -1,0 +1,54 @@
+version: '3.5'
+
+services:
+  codenip-ms-application-service-web:
+    container_name: codenip-ms-application-service-web
+    build:
+      context: ./docker/nginx
+      args:
+        UID: $U_ID
+    ports:
+      - 1100:80
+    volumes:
+      - ./public:/appdata/www/public
+    depends_on:
+      - codenip-ms-application-service-be
+    networks:
+      - codenip-microservices-network
+
+  codenip-ms-application-service-be:
+    container_name: codenip-ms-application-service-be
+    build:
+      context: docker/php
+      args:
+        UID: $U_ID
+    volumes:
+      - ./:/appdata/www
+    env_file:
+      - .env
+    depends_on:
+      - codenip-ms-application-service-db
+    networks:
+      - codenip-microservices-network
+
+  codenip-ms-application-service-db:
+    container_name: codenip-ms-application-service-db
+    build:
+      context: ./docker/database
+    ports:
+      - 10100:3306
+    environment:
+      MYSQL_DATABASE: application_database
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - codenip-ms-application-service-db-data:/var/lib/mysql
+    networks:
+      - codenip-microservices-network
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+
+volumes:
+  codenip-ms-application-service-db-data:
+
+networks:
+  codenip-microservices-network:
+    external: true
