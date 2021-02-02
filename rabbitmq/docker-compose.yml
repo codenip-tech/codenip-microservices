@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+  codenip-ms-rabbitmq-service:
+    container_name: codenip-ms-rabbitmq-service
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - codenip-microservices-network
+
+networks:
+  codenip-microservices-network:
+    external: true
