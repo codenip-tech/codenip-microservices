@@ -1,0 +1,24 @@
+framework:
+  messenger:
+    serializer:
+      default_serializer: messenger.transport.symfony_serializer
+      symfony_serializer:
+        format: json
+        context: { }
+    failure_transport: failed
+    transports:
+      async_application_mailer:
+        dsn: '%env(string:MESSENGER_TRANSPORT_DSN)%'
+        options:
+          vhost: '%env(string:MESSENGER_VHOST)%'
+          exchange:
+            name: '%env(string:MESSENGER_EXCHANGE)%'
+            type: direct
+          queues:
+            application_mailer_queue:
+              binding_keys: [ application_mailer_queue ]
+      failed:
+        dsn: 'doctrine://default?queue_name=failed'
+
+    routing:
+      'App\Messenger\Message\UserSuccessfullyStoredMessage': async_application_mailer
