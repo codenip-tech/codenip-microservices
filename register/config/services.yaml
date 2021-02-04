@@ -2,6 +2,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            $applicationServiceUsersEndpoint: '%env(resolve:APPLICATION_SERVICE_USERS_ENDPOINT)%'
 
     App\:
         resource: '../src/'
