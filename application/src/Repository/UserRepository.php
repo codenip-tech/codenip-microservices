@@ -6,7 +6,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\Persistence\ManagerRegistry;
 
 class UserRepository extends ServiceEntityRepository
 {
@@ -17,5 +18,11 @@ class UserRepository extends ServiceEntityRepository
 
     public function save(User $user): void
     {
+        try {
+            $this->_em->persist($user);
+            $this->_em->flush();
+        } catch (UniqueConstraintViolationException $e) {
+            throw $e;
+        }
     }
 }
