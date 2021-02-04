@@ -16,6 +16,19 @@ services:
     networks:
       - codenip-microservices-network
 
+  codenip-ms-application-service-ngrock:
+    container_name: codenip-ms-application-service-ngrock
+    image: wernight/ngrok:latest
+    ports:
+      - 4050:4040
+    environment:
+      NGROK_PROTOCOL: http
+      NGROK_PORT: codenip-ms-application-service-web:80
+    depends_on:
+      - codenip-ms-application-service-web
+    networks:
+      - codenip-microservices-network
+
   codenip-ms-application-service-be:
     container_name: codenip-ms-application-service-be
     build:
