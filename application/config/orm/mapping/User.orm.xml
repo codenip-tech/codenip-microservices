@@ -6,6 +6,7 @@
         <field name="name" length="20" />
         <field name="email" length="100" />
         <field name="password" length="100" nullable="true" />
+        <field name="code" length="100" nullable="true" />
         <field name="createdOn" type="datetime" column-definition="DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" />
 
         <unique-constraints>
